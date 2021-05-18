@@ -3,7 +3,7 @@ import React from 'react';
 import io from 'socket.io-client'
 import axios from 'axios';
 
-let socket = io.connect()
+let socket = io.connect("https://server-chat-react.herokuapp.com/")
 function App() {
     let [value, setValue] = React.useState()
     let [value11, setValue11] = React.useState()
@@ -11,7 +11,7 @@ function App() {
     let [mySms, setMySms] = React.useState([])  
 
     async function  send() {
-        await axios.post('/room', {
+        await axios.post('https://server-chat-react.herokuapp.com/room', {
             name: value
         })
         setPage(false)
