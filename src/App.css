@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
+.App  {
+  width: 100%;
+}
+body {
+  overflow: hidden;
+}
+.login__page {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.main__page {
+  max-width: 760px;
+  margin: 10px auto;
+  padding: 18px 30px;
+  background-color: lightgray;
+  height: calc(100vh - 120px);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 795px) {
+  .main__page {
+    margin: 10px 20px;
+  }
+}
+.form {
+  max-width: 760px;
+  margin: 10px auto;
+  padding: 18px 30px;
+}
+.my__message {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+
+}
+
+.my__message div {
+  background-color: gray;
+  min-width: 100px;
+  max-width: 200px;
+  padding: 6px 6px 6px 11px;
+  border-radius: 10px;
+  color: white
+}
+
+.someone__message div {
+  background-color: blue;
+  min-width: 100px;
+  max-width: 200px;
+  padding: 6px 6px 6px 11px;
+  border-radius: 10px;
+  color: white;
+
+}
+.dd {
+  height: 100px;
+  width: 100px;
+  background-color: red;
+}
+.my_name  {
+  text-align: right;
+}
+
+.form  {
+  display: flex;
+
+}
+
+.form textarea {
+  width: 100%;
+  height: 47px;
+  font-size: 17px;
+}
+
+.message__body  {
+  margin-bottom: 20px;
+}
