@@ -8,9 +8,11 @@ import {Provider} from 'react-redux'
 import { rootReducer } from './redux/rootReducer'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
+import io from 'socket.io-client'
 
 let store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
 
+export let socket = io.connect("http://localhost:3001/")
 
 ReactDOM.render(
   <Provider store={store}>

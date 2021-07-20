@@ -1,72 +1,111 @@
 import './App.css';
-import React from 'react';
-import io from 'socket.io-client'
-import axios from 'axios';
+import React, { useRef } from 'react';
+import { socket } from './index'
+import { useDispatch } from 'react-redux'
+import Login from './component/login';
+import {set_user} from './redux/actions'
+import MessageForm from './component/MessageForm';
+import UserRooms from './component/UserRooms';
 
-let socket = io.connect("https://server-chat-react.herokuapp.com/")
 function App() {
-    let [value, setValue] = React.useState()
-    let [value11, setValue11] = React.useState()
+    const dispatch = useDispatch()
+    let [name, setName] = React.useState('')
+    let [room, setRoom] = React.useState('')
     let [page, setPage] = React.useState(true)
     let [mySms, setMySms] = React.useState([])  
+    let message_ref = useRef()
+
+    React.useEffect(() => {
+        if (message_ref.current) message_ref.current.scrollTop = message_ref.current.scrollHeight
+    }, [mySms])
 
     async function  send() {
-        await axios.post('https://server-chat-react.herokuapp.com/room', {
-            name: value
-        })
-        setPage(false)
-        socket.emit('joined', value )
-        socket.on('getMessage', data => {
-            setMySms(data)
-        })
-    }
-
-    function setMessages(value11) {
-        if (!value11) return
-        socket.emit('message', {
-            value,
-            value11
-        })
-        setValue11('')
+        if (name && room) {
+            setPage(false)
+            dispatch(set_user({value: name, room}))
+            socket.emit('joined', { value: name, room })
+            socket.on('getMessage', data => {
+                setMySms(data)
+            })
+        }
     }
 
   return (   
       <div className='App'>  
-        {page && <div className='login__page'>
-                    <div>
-                        <div>
-                            <input type="text" value={value} onChange={(e) => setValue(e.target.value)} />
-                        </div>
-                        <div>
-                            <button onClick={send}>Войти</button>
-                        </div>                  
-                    </div>         
-                </div> }      
+        {page && <Login name={name} room={room} setName={setName} setRoom={setRoom} send={send}/> }      
 
-        {!page && <div className='main__page'>
-            {mySms.map(item => {
-                if (item.name ===  value) {
-                    return (<div className='message__body'>
-                        <div className="my__message">
-                            <div>{item.text}</div>                      
-                        </div>
-                        <p className='my_name'>{item.name}</p>
-                    </div>)
-                }
-                else 
-                    return (<div className='message__body'>
-                        <div className="someone__message">
-                            <div>{item.text}</div>
-                        </div>
-                        <p>{item.name}</p>
-                    </div>)
-            })}
-           
-        </div>}
-        <div className="form">
-            <textarea type="text" value={value11} onChange={(e) => setValue11(e.target.value)} rows='3'></textarea>
-            <button onClick={() => setMessages(value11)}>Отправить</button>
-        </div>   
+        {!page && <>
+            <div className='main__page'>
+                <UserRooms />
+                <div ref={message_ref} className='messages__wrapper'>
+                    {mySms.map((item, index) => {
+                        if (item.name ===  name) {
+                            if (item.img) {
+                                return (<div key={index} className='message__body'>
+                                            <div className="my__message" >
+                                                <div>
+                                                    <img width='350' height='230' src={item.text} alt='' />                   
+                                                </div>
+                                            </div>
+                                            <p className='my_name'>{item.name}</p>
+                                        </div>)
+                            }
+
+                            else if (item.voice) {
+                                 return (<div key={index} className='message__body'>
+                                            <div className="my__message ">
+                                                <audio src={item.text} controls></audio>                     
+                                            </div>
+                                            <p className='my_name'>{item.name}</p>  
+                                        </div>)
+
+                            }
+
+                            else {
+                                return (<div key={index} className='message__body'>
+                                            <div className="my__message">
+                                                <p>{item.text}</p>
+                                            </div>
+                                            <p className='my_name'>{item.name}</p>
+                                        </div>)
+                            }       
+                        }
+
+                        else {
+                            if (item.img) {
+                                return (<div key={index} className='message__body'>
+                                            <div className="someone__message">
+                                                <img width='300' height='200' src={item.text} alt="" />
+                                            </div>
+                                            <p className='someone_name'>{item.name}</p>
+                                        </div>)
+                            }
+
+                            else if (item.voice) {
+                                return (<div key={index} className='message__body'>
+                                            <div className="someone__message">
+                                                <audio src={item.text} controls ></audio>
+                                            </div>
+                                            <p className='someone_name'>{item.name}</p>
+                                        </div>)
+                            }
+                            
+                            else {
+                                return (<div key={index} className='message__body'>
+                                            <div className="someone__message">
+                                                <p>{item.text}</p>
+                                            </div>
+                                            <p className='someone_name'>{item.name}</p>
+                                        </div>)
+                            }
+                        }
+                         
+                    })}
+                </div>        
+                <MessageForm name={name}/> 
+            </div>
+        </> }
+ 
       </div> 
   );
 }

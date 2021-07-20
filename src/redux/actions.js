@@ -17,3 +17,10 @@ export function loading_show() {
 export function loading_hide() {
     return {type: 'HIDE_LOADING'}
 }
+
+export function set_user(payload) {
+    return {
+        type: 'SET_USER',
+        payload: payload
+    }
+}
