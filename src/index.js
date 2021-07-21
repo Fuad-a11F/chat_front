@@ -12,7 +12,7 @@ import io from 'socket.io-client'
 
 let store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
 
-export let socket = io.connect("http://localhost:3001/")
+export let socket = io.connect("https://fervent-meitner-17afe4.netlify.app/")
 
 ReactDOM.render(
   <Provider store={store}>
