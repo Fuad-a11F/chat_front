@@ -1,4 +1,4 @@
-# THis is a simple chat application.
+# This is a simple chat application.
 
 This app can be used for communication with friend. You can send text and voice messages, pictures.
 
